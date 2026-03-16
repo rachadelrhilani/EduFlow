@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->foreignId('course_id')->constrained()->onDelete('cascade');
+            $table->integer('max_capacity')->default(25);
             $table->timestamps();
         });
     }
