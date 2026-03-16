@@ -68,4 +68,7 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function getJWTIdentifier() { return $this->getKey(); }
+    public function getJWTCustomClaims() { return ['role' => $this->role]; }
 }
