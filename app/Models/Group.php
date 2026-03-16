@@ -6,5 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Group extends Model
 {
-    //
+    public function course() {
+        return $this->belongsTo(Course::class);
+    }
+
+    public function students() {
+        return $this->belongsToMany(User::class, 'group_user');
+    }
 }

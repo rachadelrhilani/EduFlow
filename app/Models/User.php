@@ -26,6 +26,25 @@ class User extends Authenticatable
         'interests'
     ];
 
+    public function coursesAsTeacher() {
+        return $this->hasMany(Course::class, 'teacher_id');
+    }
+
+    // Si Étudiant : Inscriptions aux cours
+    public function enrollments() {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    // Si Étudiant : Cours favoris
+    public function favorites() {
+        return $this->belongsToMany(Course::class, 'favorites');
+    }
+
+    // Appartenance aux groupes (pivot)
+    public function groups() {
+        return $this->belongsToMany(Group::class, 'group_user');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
