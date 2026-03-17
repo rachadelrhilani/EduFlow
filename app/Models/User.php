@@ -6,9 +6,10 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -30,17 +31,14 @@ class User extends Authenticatable
         return $this->hasMany(Course::class, 'teacher_id');
     }
 
-    // Si Étudiant : Inscriptions aux cours
     public function enrollments() {
         return $this->hasMany(Enrollment::class);
     }
 
-    // Si Étudiant : Cours favoris
     public function favorites() {
         return $this->belongsToMany(Course::class, 'favorites');
     }
 
-    // Appartenance aux groupes (pivot)
     public function groups() {
         return $this->belongsToMany(Group::class, 'group_user');
     }
