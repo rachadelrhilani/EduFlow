@@ -1,26 +1,32 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Services\CourseService;
 use Illuminate\Http\Request;
 
-class CourseController extends Controller {
+class CourseController extends Controller
+{
     protected $courseService;
 
-    public function __construct(CourseService $courseService) {
+    public function __construct(CourseService $courseService)
+    {
         $this->courseService = $courseService;
     }
 
-    public function index() {
+    public function index()
+    {
         return response()->json($this->courseService->getAllCourses());
     }
 
-    public function show($id) {
+    public function show($id)
+    {
         return response()->json($this->courseService->getCourseDetails($id));
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -31,7 +37,8 @@ class CourseController extends Controller {
         return response()->json($this->courseService->createCourse($data), 201);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         $data = $request->validate([
             'title' => 'string|max:255',
             'description' => 'string',
@@ -46,12 +53,19 @@ class CourseController extends Controller {
         }
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         try {
             $this->courseService->deleteCourse($id);
             return response()->json(['message' => 'Cours supprimé']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 403);
         }
+    }
+    // recommendations
+    public function recommendations()
+    {
+        $courses = $this->courseService->getRecommendations();
+        return response()->json($courses);
     }
 }

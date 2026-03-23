@@ -19,6 +19,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/courses', [CourseController::class, 'index']);
     Route::get('/courses/{id}', [CourseController::class, 'show']);
 
+    Route::middleware('role:étudiant')->group(function () {
+        Route::get('/recommendations', [CourseController::class, 'recommendations']);
+    });
+
     Route::middleware('role:enseignant')->group(function () {
         Route::post('/courses', [CourseController::class, 'store']);
         Route::put('/courses/{id}', [CourseController::class, 'update']);

@@ -1,33 +1,49 @@
 <?php
+
 namespace App\Repositories\Eloquent;
 
 use App\Models\Course;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 
-class CourseRepository implements CourseRepositoryInterface {
-    public function all() {
+class CourseRepository implements CourseRepositoryInterface
+{
+    public function all()
+    {
         return Course::with(['teacher', 'category'])->get();
     }
 
-    public function findById(int $id) {
+    public function findById(int $id)
+    {
         return Course::with(['teacher', 'category', 'groups'])->findOrFail($id);
     }
 
-    public function create(array $data) {
+    public function create(array $data)
+    {
         return Course::create($data);
     }
 
-    public function update(int $id, array $data) {
+    public function update(int $id, array $data)
+    {
         $course = Course::findOrFail($id);
         $course->update($data);
         return $course;
     }
 
-    public function delete(int $id) {
+    public function delete(int $id)
+    {
         return Course::destroy($id);
     }
 
-    public function getByTeacher(int $teacherId) {
+    public function getByTeacher(int $teacherId)
+    {
         return Course::where('teacher_id', $teacherId)->get();
+    }
+
+    public function getByCategories(array $categoryNames)
+    {
+        return Course::with(['teacher', 'category'])
+            ->whereHas('category', function ($query) use ($categoryNames) {
+                $query->whereIn('name', $categoryNames);
+            })->get();
     }
 }
