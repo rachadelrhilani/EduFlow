@@ -3,6 +3,7 @@
 namespace App\Repositories\Eloquent;
 
 use App\Models\Course;
+use App\Models\User;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
 
 class CourseRepository implements CourseRepositoryInterface
@@ -45,5 +46,17 @@ class CourseRepository implements CourseRepositoryInterface
             ->whereHas('category', function ($query) use ($categoryNames) {
                 $query->whereIn('name', $categoryNames);
             })->get();
+    }
+
+    public function toggleFavorite(int $userId, int $courseId)
+    {
+        $user = User::findOrFail($userId);
+        return $user->favorites()->toggle($courseId);
+    }
+
+    public function getUserFavorites(int $userId)
+    {
+        $user = User::findOrFail($userId);
+        return $user->favorites()->with(['teacher', 'category'])->get();
     }
 }
