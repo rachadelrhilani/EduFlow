@@ -8,4 +8,5 @@ interface CourseRepositoryInterface {
     public function update(int $id, array $data);
     public function delete(int $id);
     public function getByTeacher(int $teacherId);
+    public function getByCategories(array $categoryNames);
 }
