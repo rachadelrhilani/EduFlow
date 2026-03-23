@@ -63,4 +63,14 @@ class CourseService
 
         return $this->courseRepo->getByCategories($user->interests);
     }
+
+    public function toggleFavorite(int $courseId)
+    {
+        return $this->courseRepo->toggleFavorite(auth()->id(), $courseId);
+    }
+
+    public function getMyFavorites()
+    {
+        return $this->courseRepo->getUserFavorites(auth()->id());
+    }
 }
