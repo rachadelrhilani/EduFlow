@@ -68,4 +68,21 @@ class CourseController extends Controller
         $courses = $this->courseService->getRecommendations();
         return response()->json($courses);
     }
+
+    /* toggle de favoris */
+    public function toggleFavorite($id)
+    {
+        try {
+            $result = $this->courseService->toggleFavorite($id);
+            $status = count($result['attached']) > 0 ? 'ajouté aux' : 'retiré des';
+            return response()->json(['message' => "Cours $status favoris."]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => "Cours introuvable"], 404);
+        }
+    }
+
+    public function favorites()
+    {
+        return response()->json($this->courseService->getMyFavorites());
+    }
 }
