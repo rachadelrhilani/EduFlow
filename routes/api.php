@@ -25,6 +25,8 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/courses/{id}/favorite', [CourseController::class, 'toggleFavorite']);
         Route::get('/favorites', [CourseController::class, 'favorites']);
 
+
+        Route::post('/courses/{id}/enroll', [EnrollmentController::class, 'store']); // + Stripe Token
         Route::delete('/courses/{id}/withdraw', [EnrollmentController::class, 'destroy']);
     });
 

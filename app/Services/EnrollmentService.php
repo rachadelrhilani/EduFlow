@@ -49,7 +49,7 @@ class EnrollmentService
                 "description" => "Inscription : " . $course->title . " par " . Auth::user()->email
             ]);
 
-            return $this->enrollRepo->enroll($userId, $courseId, $charge->id);
+            return $this->enrollRepo->enroll($userId, $courseId, $charge->id, $course->price);
         } catch (Exception $e) {
             // si le paiement échoue (carte refusée, etc.)
             throw new Exception("Échec du paiement : " . $e->getMessage());

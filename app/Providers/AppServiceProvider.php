@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Repositories\Eloquent\CourseRepository;
+use App\Repositories\Eloquent\EnrollmentRepository;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
+use App\Repositories\Interfaces\EnrollmentRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
          CourseRepositoryInterface::class, 
         CourseRepository::class
     );
+    $this->app->bind(
+            EnrollmentRepositoryInterface::class, 
+            EnrollmentRepository::class
+        );
     }
 
     /**

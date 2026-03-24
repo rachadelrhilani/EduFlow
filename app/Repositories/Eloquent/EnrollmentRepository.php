@@ -1,17 +1,20 @@
 <?php
 
+namespace App\Repositories\Eloquent;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Repositories\Interfaces\EnrollmentRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
+
 class EnrollmentRepository implements EnrollmentRepositoryInterface {
-    public function enroll($userId, $courseId, $paymentId) {
+    public function enroll($userId, $courseId, $paymentId, $amount) {
         return Enrollment::create([
             'user_id' => $userId,
             'course_id' => $courseId,
             'payment_status' => 'paid',
-            'stripe_id' => $paymentId
+            'stripe_id' => $paymentId,
+            'amount' => $amount
         ]);
     }
 
