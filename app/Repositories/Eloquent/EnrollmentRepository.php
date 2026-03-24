@@ -23,7 +23,7 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface {
     }
 
     public function getStudentsByCourse($courseId) {
-        return Course::find($courseId)->enrollments()->with('user')->get();
+        return Course::find($courseId)->students()->get();
     }
 
     public function getTeacherStats(int $teacherId) {
@@ -44,7 +44,7 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface {
                 
             // Details par cours (Optionnel mais très utile pour un Dashboard)
             'courses_summary' => Course::where('teacher_id', $teacherId)
-                ->withCount('enrollments')
+                ->withCount('students')
                 ->get(['id', 'title', 'price'])
         ];
     }
