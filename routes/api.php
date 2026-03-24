@@ -21,7 +21,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::middleware('role:étudiant')->group(function () {
         Route::get('/recommendations', [CourseController::class, 'recommendations']);
-        // Ajouter ou supprimer un favori (on utilise POST car on modifie l'état)
+        // ajouter ou supprimer un favori (on utilise POST car on modifie l'état)
         Route::post('/courses/{id}/favorite', [CourseController::class, 'toggleFavorite']);
         Route::get('/favorites', [CourseController::class, 'favorites']);
     });
