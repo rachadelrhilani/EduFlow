@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EnrollmentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,14 +22,18 @@ Route::middleware('auth:api')->group(function () {
 
     Route::middleware('role:étudiant')->group(function () {
         Route::get('/recommendations', [CourseController::class, 'recommendations']);
-        // ajouter ou supprimer un favori (on utilise POST car on modifie l'état)
         Route::post('/courses/{id}/favorite', [CourseController::class, 'toggleFavorite']);
         Route::get('/favorites', [CourseController::class, 'favorites']);
+
+        Route::delete('/courses/{id}/withdraw', [EnrollmentController::class, 'destroy']);
     });
 
     Route::middleware('role:enseignant')->group(function () {
         Route::post('/courses', [CourseController::class, 'store']);
         Route::put('/courses/{id}', [CourseController::class, 'update']);
         Route::delete('/courses/{id}', [CourseController::class, 'destroy']);
+
+        Route::get('/my-courses/{id}/students', [EnrollmentController::class, 'courseStudents']);
+        Route::get('/my-stats', [EnrollmentController::class, 'stats']);
     });
 });

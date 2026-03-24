@@ -49,7 +49,6 @@ class EnrollmentService
                 "description" => "Inscription : " . $course->title . " par " . Auth::user()->email
             ]);
 
-            // si le paiement réussit, on enregistre l'inscription via le Repository
             return $this->enrollRepo->enroll($userId, $courseId, $charge->id);
         } catch (Exception $e) {
             // si le paiement échoue (carte refusée, etc.)
@@ -60,6 +59,17 @@ class EnrollmentService
     public function cancelEnrollment(int $courseId)
     {
         return $this->enrollRepo->withdraw(Auth::id(), $courseId);
+    }
+
+    public function getStudentsForCourse(int $courseId)
+    {
+        $course = $this->courseRepo->findById($courseId);
+
+        if ($course->teacher_id !== auth()->id()) {
+            throw new \Exception("Vous n'êtes pas autorisé à voir les inscrits de ce cours.");
+        }
+
+        return $this->enrollRepo->getStudentsByCourse($courseId);
     }
 
     public function getStatsForTeacher()
