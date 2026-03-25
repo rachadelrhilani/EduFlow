@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Enrollment;
 use App\Repositories\Interfaces\EnrollmentRepositoryInterface;
 use App\Repositories\Interfaces\CourseRepositoryInterface;
+use App\Repositories\Interfaces\GroupRepositoryInterface;
 use Stripe\Stripe;
 use Stripe\Charge;
 use Exception;
@@ -14,13 +15,16 @@ class EnrollmentService
 {
     protected $enrollRepo;
     protected $courseRepo;
+    protected $groupRepo;
 
     public function __construct(
         EnrollmentRepositoryInterface $enrollRepo,
-        CourseRepositoryInterface $courseRepo
+        CourseRepositoryInterface $courseRepo,
+        GroupRepositoryInterface $groupRepo
     ) {
         $this->enrollRepo = $enrollRepo;
         $this->courseRepo = $courseRepo;
+        $this->groupRepo = $groupRepo;
     }
 
     public function enrollStudent(int $courseId, string $stripeToken)
@@ -49,11 +53,30 @@ class EnrollmentService
                 "description" => "Inscription : " . $course->title . " par " . Auth::user()->email
             ]);
 
-            return $this->enrollRepo->enroll($userId, $courseId, $charge->id, $course->price);
+            $enrollment = $this->enrollRepo->enroll($userId, $courseId, $charge->id, $course->price);
+            
+            $group = $this->groupRepo->getOrCreateAvailableGroup($courseId);
+            $this->groupRepo->addStudentToGroup($group->id, $userId);
+
+            // retour des données pour le contrôleur
+            return [
+                'enrollment' => $enrollment,
+                'group_assigned' => $group->name,
+                'current_capacity' => $group->students()->count()
+            ];
         } catch (Exception $e) {
-            // si le paiement échoue (carte refusée, etc.)
             throw new Exception("Échec du paiement : " . $e->getMessage());
         }
+    }
+    public function getGroupsInfo(int $courseId)
+    {
+        // On vérifie d'abord que le cours appartient bien au prof connecté
+        $course = $this->courseRepo->findById($courseId);
+        if ($course->teacher_id !== Auth::id()) {
+            throw new Exception("Accès non autorisé à ces groupes.");
+        }
+
+        return $this->groupRepo->getGroupsByCourse($courseId);
     }
 
     public function cancelEnrollment(int $courseId)
