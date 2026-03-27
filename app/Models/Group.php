@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class Group extends Model
 {
+    use HasFactory, Notifiable;
     protected $fillable = ['name', 'course_id', 'max_capacity'];
 
     protected $attributes = [

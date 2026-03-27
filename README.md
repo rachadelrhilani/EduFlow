@@ -64,3 +64,33 @@ Ce projet respecte les principes du **Clean Code** et une architecture modulaire
    ```bash
    git clone https://github.com/rachadelrhilani/EduFlow
    cd EduFlow
+   ```
+2. **Installer les dépendances** :
+
+```bash
+   composer install
+```
+
+3. **Configuration de l'Environnement** :
+Copiez le fichier d'exemple et configurez votre base de données ainsi que vos clés Stripe.
+
+
+```Bash
+cp .env.example .env
+php artisan key:generate
+php artisan jwt:secret
+```
+4. **Migrations & Seeding**:
+
+```Bash
+php artisan migrate --seed
+```
+5.**Lancer l'application**:
+
+```Bash
+php artisan serve
+```
+6.**Documentation API**:
+La documentation de l'API est générée automatiquement via Swagger. Une fois le serveur lancé, vous pouvez accéder à l'interface interactive à l'adresse suivante :
+
+http://localhost:8000/api/documentation
