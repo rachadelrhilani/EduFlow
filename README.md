@@ -1,10 +1,10 @@
-# EduFlow : API de Gestion de Cours Moderne 🎓
+# EduFlow : API de Gestion de Cours Moderne 
 
 EduFlow est une API robuste basée sur **Laravel 12**, conçue pour les établissements d'enseignement afin de gérer les cours, les inscriptions des étudiants et l'organisation des groupes académiques. Cette plateforme intègre des fonctionnalités modernes telles que le groupage automatisé des étudiants, des recommandations de cours basées sur les intérêts et des paiements en ligne sécurisés.
 
 ---
 
-## 🚀 Fonctionnalités Clés
+## Fonctionnalités Clés
 
 ### Authentification & Sécurité
 - **Authentification JWT** : Inscription et connexion sécurisées des utilisateurs via JSON Web Tokens.
@@ -29,7 +29,7 @@ EduFlow est une API robuste basée sur **Laravel 12**, conçue pour les établis
 
 ---
 
-## 🛠 Stack Technique
+## Stack Technique
 
 - **Framework** : [Laravel 12](https://laravel.com)
 - **Langage** : PHP 8.2+
@@ -41,7 +41,7 @@ EduFlow est une API robuste basée sur **Laravel 12**, conçue pour les établis
 
 ---
 
-## 🏗 Modèles d'Architecture
+## Modèles d'Architecture
 
 Ce projet respecte les principes du **Clean Code** et une architecture modulaire :
 - **Repository Pattern** : Couche d'abstraction entre le domaine et la persistance des données.
@@ -50,17 +50,17 @@ Ce projet respecte les principes du **Clean Code** et une architecture modulaire
 
 ---
 
-## 📥 Mise en Route
+## Mise en Route
 
 ### Prérequis
-- PHP 8.2 ou supérieur
+- PHP 8.2
 - Composer
-- MySQL / MariaDB
+- MySQL
 - Un compte Stripe (pour les paiements)
 
 ### Installation
 
 1. **Cloner le dépôt** :
    ```bash
-   git clone <url-du-depot>
+   git clone https://github.com/rachadelrhilani/EduFlow
    cd EduFlow
