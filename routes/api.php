@@ -3,6 +3,7 @@
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EnrollmentController;
+use App\Http\Controllers\GroupController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,5 +38,6 @@ Route::middleware('auth:api')->group(function () {
 
         Route::get('/my-courses/{id}/students', [EnrollmentController::class, 'courseStudents']);
         Route::get('/my-stats', [EnrollmentController::class, 'stats']);
+        Route::get('/courses/{id}/groups', [GroupController::class, 'index']);
     });
 });
