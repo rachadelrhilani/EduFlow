@@ -1,59 +1,66 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# EduFlow : API de Gestion de Cours Moderne 🎓
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+EduFlow est une API robuste basée sur **Laravel 12**, conçue pour les établissements d'enseignement afin de gérer les cours, les inscriptions des étudiants et l'organisation des groupes académiques. Cette plateforme intègre des fonctionnalités modernes telles que le groupage automatisé des étudiants, des recommandations de cours basées sur les intérêts et des paiements en ligne sécurisés.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Fonctionnalités Clés
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Authentification & Sécurité
+- **Authentification JWT** : Inscription et connexion sécurisées des utilisateurs via JSON Web Tokens.
+- **Accès par Rôles** : Fonctionnalités spécialisées pour les **Étudiants** et les **Enseignants**.
+- **Gestion des Mots de Passe** : Flux de réinitialisation sécurisé.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Gestion des Cours
+- **Tableau de Bord Enseignant** : Opérations CRUD complètes pour les cours, incluant la tarification et les métadonnées.
+- **Découverte pour l'Étudiant** : Recherche avancée et filtrage pour explorer les cours disponibles.
+- **Liste de Souhaits** : Sauvegarde des cours d'intérêt dans une liste de favoris personnelle.
 
-## Learning Laravel
+### Recommandations Intelligentes
+- **Suggestions basées sur les Intérêts** : Recommandations automatisées selon les domaines sélectionnés et les aspirations professionnelles de l'étudiant.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### Paiements & Inscriptions
+- **Intégration Stripe** : Paiements par carte bancaire fluides et sécurisés.
+- **Cycle de Vie des Cours** : Processus simplifiés d'inscription et de désistement.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Groupage Automatisé
+- **Équipes Dynamiques** : Assignation automatique des étudiants dans des groupes (max 25 participants par groupe).
+- **Auto-scaling** : Création automatique de nouveaux groupes au fur et à mesure de la croissance des inscriptions.
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🛠 Stack Technique
 
-### Premium Partners
+- **Framework** : [Laravel 12](https://laravel.com)
+- **Langage** : PHP 8.2+
+- **Base de données** : MySQL / PostgreSQL
+- **Sécurité** : [PHP Open Source Saver JWT-Auth](https://github.com/PHP-Open-Source-Saver/jwt-auth)
+- **Passerelle de Paiement** : [Stripe PHP](https://github.com/stripe/stripe-php)
+- **Documentation API** : [L5-Swagger](https://github.com/DarkaOnline/L5-Swagger) (OpenAPI 3.0)
+- **Tests** : PHPUnit
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## 🏗 Modèles d'Architecture
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Ce projet respecte les principes du **Clean Code** et une architecture modulaire :
+- **Repository Pattern** : Couche d'abstraction entre le domaine et la persistance des données.
+- **Service Layer** : Logique métier découplée des contrôleurs pour une meilleure maintenance et testabilité.
+- **Form Requests** : Logique de validation dédiée pour toutes les données entrantes de l'API.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 📥 Mise en Route
 
-## Security Vulnerabilities
+### Prérequis
+- PHP 8.2 ou supérieur
+- Composer
+- MySQL / MariaDB
+- Un compte Stripe (pour les paiements)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Installation
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. **Cloner le dépôt** :
+   ```bash
+   git clone <url-du-depot>
+   cd EduFlow

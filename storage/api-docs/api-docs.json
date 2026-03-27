@@ -221,6 +221,564 @@
                     }
                 }
             }
+        },
+        "/api/courses": {
+            "get": {
+                "tags": [
+                    "Cours"
+                ],
+                "summary": "Liste de tous les cours disponibles",
+                "operationId": "02eeda67042dba2d22a517f26fb8eaf1",
+                "responses": {
+                    "200": {
+                        "description": "Liste des cours récupérée"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Cours"
+                ],
+                "summary": "Créer un nouveau cours (Enseignant uniquement)",
+                "operationId": "a4d6b7e7be59571034428ffbb86aaf0a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "description",
+                                    "price",
+                                    "category_id"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Laravel Avancé"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Maîtrisez le Repository Pattern"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 49.99
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Cours créé"
+                    },
+                    "403": {
+                        "description": "Accès refusé"
+                    },
+                    "422": {
+                        "description": "Erreur de validation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "api/courses/{id}": {
+            "get": {
+                "tags": [
+                    "Cours"
+                ],
+                "summary": "Détails d'un cours spécifique",
+                "operationId": "854f6bd61994988360cf069d565b60ed",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails du cours"
+                    },
+                    "404": {
+                        "description": "Cours non trouvé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/courses/{id}": {
+            "put": {
+                "tags": [
+                    "Cours"
+                ],
+                "summary": "Modifier un cours existant",
+                "operationId": "4d00e54a4b57b3259c40894ad2d0c76b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cours mis à jour"
+                    },
+                    "403": {
+                        "description": "Vous n'êtes pas l'auteur de ce cours"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Cours"
+                ],
+                "summary": "Supprimer un cours",
+                "operationId": "3a2888333ed2868b6102094f5348520e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cours supprimé"
+                    },
+                    "403": {
+                        "description": "Action non autorisée"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/recommendations": {
+            "get": {
+                "tags": [
+                    "Cours"
+                ],
+                "summary": "Obtenir des recommandations basées sur les intérêts",
+                "operationId": "20f885bed41b24184477162e57df2d4c",
+                "responses": {
+                    "200": {
+                        "description": "Liste des recommandations"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/courses/{id}/favorite": {
+            "post": {
+                "tags": [
+                    "Cours"
+                ],
+                "summary": "Ajouter ou retirer un cours des favoris",
+                "operationId": "1a7db1cb0d99d367edca136d4fce6750",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Statut du favori mis à jour"
+                    },
+                    "404": {
+                        "description": "Cours introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/favorites": {
+            "get": {
+                "tags": [
+                    "Cours"
+                ],
+                "summary": "Liste de mes cours favoris",
+                "operationId": "e9cab0da1126d4b54fe25df1a7eb8071",
+                "responses": {
+                    "200": {
+                        "description": "Liste des favoris récupérée"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/courses/{id}/enroll": {
+            "post": {
+                "tags": [
+                    "Inscriptions"
+                ],
+                "summary": "S'inscrire à un cours (Paiement Stripe)",
+                "operationId": "056e8b95bd8348a95a55404cc9b8db4e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID du cours",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "stripeToken"
+                                ],
+                                "properties": {
+                                    "stripeToken": {
+                                        "description": "Token généré par Stripe.js",
+                                        "type": "string",
+                                        "example": "tok_visa"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Inscription réussie",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Inscription réussie !"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erreur de paiement ou d'inscription"
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/my-courses/{id}/students": {
+            "get": {
+                "tags": [
+                    "Inscriptions"
+                ],
+                "summary": "Liste des étudiants inscrits à un cours (Enseignant uniquement)",
+                "operationId": "80c0ecdb213b48ab081a71fb5e87d630",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des étudiants récupérée",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "course_id": {
+                                            "type": "integer"
+                                        },
+                                        "total_students": {
+                                            "type": "integer"
+                                        },
+                                        "students": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Accès refusé"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/my-stats": {
+            "get": {
+                "tags": [
+                    "Inscriptions"
+                ],
+                "summary": "Statistiques globales des revenus et inscriptions (Enseignant uniquement)",
+                "operationId": "cd15211df8af935cfab62c5417b2a9cd",
+                "responses": {
+                    "200": {
+                        "description": "Statistiques récupérées",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "total_revenue": {
+                                            "type": "number",
+                                            "format": "float"
+                                        },
+                                        "total_enrollments": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/courses/{id}/withdraw": {
+            "delete": {
+                "tags": [
+                    "Inscriptions"
+                ],
+                "summary": "Se désinscrire d'un cours",
+                "operationId": "e02a70533c0228884562471bc4fea7cb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Désinscription réussie",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Inscription introuvable"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/courses/{courseId}/groups": {
+            "get": {
+                "tags": [
+                    "Groupes"
+                ],
+                "summary": "Récupérer la structure des groupes d'un cours",
+                "description": "Affiche la répartition des étudiants par groupes (max 25 par groupe). Réservé aux enseignants.",
+                "operationId": "32c638a42ef2db646f87fe7c75162155",
+                "parameters": [
+                    {
+                        "name": "courseId",
+                        "in": "path",
+                        "description": "L'ID du cours pour lequel on veut voir les groupes",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Structure des groupes récupérée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "course_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "group_name": {
+                                                        "type": "string",
+                                                        "example": "Groupe A"
+                                                    },
+                                                    "student_count": {
+                                                        "type": "integer",
+                                                        "example": 25
+                                                    },
+                                                    "students": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Accès interdit ou erreur lors de la récupération",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Action non autorisée."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Utilisateur non authentifié"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -238,6 +796,18 @@
         {
             "name": "Authentification",
             "description": "Gestion des comptes utilisateurs, connexion et mot de passe"
+        },
+        {
+            "name": "Cours",
+            "description": "Gestion des cours, favoris et recommandations"
+        },
+        {
+            "name": "Inscriptions",
+            "description": "Gestion des inscriptions aux cours et statistiques"
+        },
+        {
+            "name": "Groupes",
+            "description": "Gestion des groupes automatiques pour les cours"
         }
     ]
 }
