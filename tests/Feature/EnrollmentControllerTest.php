@@ -13,9 +13,7 @@ class EnrollmentControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * Test de l'inscription à un cours avec un token Stripe.
-     */
+    
     public function test_etudiant_peut_sinscrire_a_un_cours()
     {
         $student = User::factory()->create(['role' => 'étudiant']);
@@ -38,9 +36,7 @@ class EnrollmentControllerTest extends TestCase
                  ->assertJsonPath('message', 'Inscription réussie !');
     }
 
-    /**
-     * Test de la récupération des statistiques par un enseignant.
-     */
+    
     public function test_enseignant_peut_voir_ses_statistiques()
     {
         $teacher = User::factory()->create(['role' => 'enseignant']);
@@ -64,9 +60,7 @@ class EnrollmentControllerTest extends TestCase
                  ]);
     }
 
-    /**
-     * Test de la désinscription d'un cours.
-     */
+    
     public function test_etudiant_peut_se_retirer_dun_cours()
     {
         $student = User::factory()->create(['role' => 'étudiant']);
@@ -86,9 +80,7 @@ class EnrollmentControllerTest extends TestCase
                  ->assertJsonPath('message', 'Vous vous êtes retiré du cours avec succès.');
     }
 
-    /**
-     * Test d'erreur : Désinscription d'un cours où on n'est pas inscrit.
-     */
+   
     public function test_erreur_si_retrait_dun_cours_non_inscrit()
     {
         $student = User::factory()->create(['role' => 'étudiant']);
