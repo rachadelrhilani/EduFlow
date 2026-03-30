@@ -67,7 +67,71 @@ function displayValidationErrors(errors) {
     const errorDiv = document.getElementById('error-message');
     errorDiv.classList.remove('hidden');
     
-    // On transforme l'objet d'erreurs en liste lisible
     const messages = Object.values(errors).flat().join('<br>');
     errorDiv.innerHTML = `<div class="bg-red-50 text-red-700 p-3 rounded-lg border border-red-200">${messages}</div>`;
 }
+
+export const initLogin = () => {
+    const loginForm = document.getElementById('loginForm');
+    if (!loginForm){
+      return;
+    } 
+
+    // Vérifier si on vient de s'inscrire (via l'URL)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('registered')) {
+        document.getElementById('success-message')?.classList.remove('hidden');
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const btn = document.getElementById('loginBtn');
+        const errorDiv = document.getElementById('error-message');
+        
+        const payload = {
+            email: loginForm.querySelector('input[name="email"]').value,
+            password: loginForm.querySelector('input[name="password"]').value,
+        };
+
+        btn.disabled = true;
+        btn.innerText = "Connexion...";
+        errorDiv.classList.add('hidden');
+
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // --- CRUCIAL : Stockage du JWT ---
+                localStorage.setItem('eduflow_token', data.access_token || data.token);
+                
+                // On stocke aussi les infos de base de l'utilisateur si disponibles
+                if (data.user) {
+                    localStorage.setItem('user_role', data.user.role);
+                    localStorage.setItem('user_name', data.user.name);
+                }
+
+                // Redirection vers le dashboard
+                window.location.href = '/dashboard';
+            } else {
+                errorDiv.innerText = data.error || "Identifiants invalides.";
+                errorDiv.classList.remove('hidden');
+            }
+        } catch (err) {
+            errorDiv.innerText = "Erreur de connexion au serveur.";
+            errorDiv.classList.remove('hidden');
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Se connecter";
+        }
+    });
+};
