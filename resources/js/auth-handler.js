@@ -19,7 +19,7 @@ export const initRegister = () => {
             password: form.querySelector('input[name="password"]').value,
             password_confirmation: form.querySelector('input[name="password_confirmation"]').value,
             role: form.querySelector('input[name="role"]:checked')?.value,
-            interests: [] // Optionnel selon ton controller
+            interests: []
         };
 
         // Debug visuel pour toi
