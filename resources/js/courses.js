@@ -12,7 +12,7 @@ export const initCourses = async () => {
         
         renderCourses(allCourses);
 
-        // Filtrage en temps réel
+        // Filtre en temps réel
         searchInput?.addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             const filtered = allCourses.filter(c => 

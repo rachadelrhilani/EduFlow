@@ -1,6 +1,7 @@
 import './bootstrap';
 import { initRegister, initLogin, initForgotPassword } from './auth-handler';
 import { checkAuth } from './guard'; 
+import { initCourses } from './courses';
 import { initDashboard } from './dashboard';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,5 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isAuthorized) {
             initDashboard();
         }
+    }
+    if (document.getElementById("courses-grid")){
+       initCourses();
     }
 });
