@@ -16,3 +16,14 @@ Route::get('/register', function () {
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
 });
+
+// routes/web.php
+Route::get('/reset-password/{token}', function (string $token) {
+    return view('auth.reset-password', ['token' => $token]);
+})->name('password.reset'); // Ce nom est indispensable
+
+
+
+Route::middleware(['auth'])->group(function () {
+    
+})

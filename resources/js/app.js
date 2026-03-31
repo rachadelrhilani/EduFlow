@@ -1,5 +1,5 @@
 import './bootstrap';
-import { initRegister,initLogin } from './auth-handler';
+import { initRegister,initLogin,initForgotPassword } from './auth-handler';
 
 // On initialise seulement si on est sur la bonne page
 document.addEventListener('DOMContentLoaded', () => {
@@ -8,5 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (document.getElementById('loginForm')) {
         initLogin();
+    }
+    if (document.getElementById('forgotPasswordForm')) {
+        initForgotPassword();
     }
 });

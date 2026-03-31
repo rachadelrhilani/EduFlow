@@ -10,6 +10,7 @@ use App\Repositories\Interfaces\CourseRepositoryInterface;
 use App\Repositories\Interfaces\EnrollmentRepositoryInterface;
 use App\Repositories\Interfaces\GroupRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -42,6 +43,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        ResetPassword::createUrlUsing(function ($user, string $token) {
+            // On construit l'URL en dur vers la route WEB
+            // On utilise config('app.url') pour que ça s'adapte à ton .env
+            return config('app.url') . '/reset-password/' . $token . '?email=' . urlencode($user->email);
+        });
     }
 }

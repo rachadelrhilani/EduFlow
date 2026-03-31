@@ -1,3 +1,4 @@
+// Register
 export const initRegister = () => {
     const form = document.getElementById('registerForm');
     if (!form) return;
@@ -70,14 +71,13 @@ function displayValidationErrors(errors) {
     const messages = Object.values(errors).flat().join('<br>');
     errorDiv.innerHTML = `<div class="bg-red-50 text-red-700 p-3 rounded-lg border border-red-200">${messages}</div>`;
 }
-
+// login
 export const initLogin = () => {
     const loginForm = document.getElementById('loginForm');
     if (!loginForm){
       return;
     } 
 
-    // Vérifier si on vient de s'inscrire (via l'URL)
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('registered')) {
         document.getElementById('success-message')?.classList.remove('hidden');
@@ -112,7 +112,6 @@ export const initLogin = () => {
             const data = await response.json();
 
             if (response.ok) {
-                // --- CRUCIAL : Stockage du JWT ---
                 localStorage.setItem('eduflow_token', data.access_token || data.token);
                 
                 // On stocke aussi les infos de base de l'utilisateur si disponibles
@@ -133,6 +132,53 @@ export const initLogin = () => {
         } finally {
             btn.disabled = false;
             btn.innerText = "Se connecter";
+        }
+    });
+};
+
+export const initForgotPassword = () => {
+    const form = document.getElementById('forgotPasswordForm');
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('forgotBtn');
+        const statusDiv = document.getElementById('status-message');
+        
+        const email = document.getElementById('forgot_email').value;
+
+        btn.disabled = true;
+        btn.innerText = "Envoi en cours...";
+
+        try {
+            const response = await fetch('/api/password/forgot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    // CRUCIAL : Protection contre les requêtes forgeables
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ email })
+            });
+
+            const data = await response.json();
+
+            statusDiv.classList.remove('hidden', 'bg-red-50', 'text-red-700', 'bg-green-50', 'text-green-700');
+            
+            if (response.ok) {
+                statusDiv.classList.add('bg-green-50', 'text-green-700');
+                statusDiv.innerText = "Si cet email existe, un lien a été envoyé.";
+                form.reset();
+            } else {
+                statusDiv.classList.add('bg-red-50', 'text-red-700');
+                statusDiv.innerText = data.message || "Erreur lors de l'envoi.";
+            }
+        } catch (err) {
+            console.error("Erreur technique EduFlow");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Envoyer le lien";
         }
     });
 };
