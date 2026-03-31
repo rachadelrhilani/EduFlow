@@ -3,27 +3,43 @@ export const initRegister = () => {
     const form = document.getElementById('registerForm');
     if (!form) return;
 
+    // --- GESTION DYNAMIQUE DE L'AFFICHAGE ---
+    const roleInputs = form.querySelectorAll('input[name="role"]');
+    const interestsSection = document.getElementById('interests-section');
+
+    roleInputs.forEach(input => {
+        input.addEventListener('change', (e) => {
+            // On affiche les intérêts uniquement pour l'étudiant
+            if (e.target.value === 'étudiant') {
+                interestsSection?.classList.remove('hidden');
+            } else {
+                interestsSection?.classList.add('hidden');
+            }
+        });
+    });
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const btn = form.querySelector('button[type="submit"]');
         const errorDiv = document.getElementById('error-message');
         
-        // Nettoyage avant envoi
         errorDiv.classList.add('hidden');
         errorDiv.innerHTML = '';
 
-        // Construction manuelle du payload pour être certain des clés envoyées
+        // --- RÉCUPÉRATION DES INTÉRÊTS COCHÉS ---
+        const selectedInterests = Array.from(form.querySelectorAll('input[name="interests[]"]:checked'))
+            .map(checkbox => checkbox.value);
+
         const payload = {
             name: form.querySelector('input[name="name"]').value,
             email: form.querySelector('input[name="email"]').value,
             password: form.querySelector('input[name="password"]').value,
             password_confirmation: form.querySelector('input[name="password_confirmation"]').value,
             role: form.querySelector('input[name="role"]:checked')?.value,
-            interests: []
+            interests: selectedInterests // On envoie le tableau d'intérêts
         };
 
-        // Debug visuel pour toi
         console.log("Payload envoyé :", payload);
 
         btn.disabled = true;
@@ -43,13 +59,10 @@ export const initRegister = () => {
             const data = await response.json();
 
             if (response.ok) {
-                // Succès : redirection
                 window.location.href = '/login?registered=true';
             } else if (response.status === 422) {
-                // Erreurs de validation (Nom déjà pris, mdp trop court, etc.)
                 displayValidationErrors(data.errors);
             } else {
-                // Autres erreurs (500, etc.)
                 errorDiv.innerText = data.message || "Une erreur est survenue.";
                 errorDiv.classList.remove('hidden');
             }
@@ -66,8 +79,9 @@ export const initRegister = () => {
 
 function displayValidationErrors(errors) {
     const errorDiv = document.getElementById('error-message');
-    errorDiv.classList.remove('hidden');
+    if (!errorDiv) return;
     
+    errorDiv.classList.remove('hidden');
     const messages = Object.values(errors).flat().join('<br>');
     errorDiv.innerHTML = `<div class="bg-red-50 text-red-700 p-3 rounded-lg border border-red-200">${messages}</div>`;
 }

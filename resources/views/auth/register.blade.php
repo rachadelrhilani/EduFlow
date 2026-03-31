@@ -3,7 +3,7 @@
 @section('content')
 <div class="min-h-[80vh] flex items-center justify-center">
     <div class="max-w-2xl w-full bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden flex flex-col md:flex-row">
-        
+
         <div class="md:w-1/3 bg-[#1E3A8A] p-8 text-white flex flex-col justify-center">
             <h2 class="text-2xl font-poppins font-bold mb-4">Rejoignez EduFlow</h2>
             <p class="text-sm font-roboto opacity-80">
@@ -47,16 +47,29 @@
                 <div class="space-y-4">
                     <input type="text" id="name" name="name" placeholder="Nom complet" required
                         class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#2563EB] focus:border-transparent outline-none transition font-roboto">
-                    
+
                     <input type="email" id="email" name="email" placeholder="Adresse Email" required
                         class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#2563EB] focus:border-transparent outline-none transition font-roboto">
-                    
+
                     <div class="grid grid-cols-2 gap-4">
                         <input type="password" id="password" name="password" placeholder="Mot de passe" required
                             class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#2563EB] focus:border-transparent outline-none transition font-roboto">
-                        
+
                         <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirmer" required
                             class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#2563EB] focus:border-transparent outline-none transition font-roboto">
+                    </div>
+                </div>
+                <div id="interests-section" class="space-y-3">
+                    <p class="text-sm font-poppins font-bold text-gray-700">Vos centres d'intérêt :</p>
+                    <div class="flex flex-wrap gap-2">
+                        @foreach(['Développement Web', 'Design UI/UX', 'Marketing', 'Data Science', 'Business', 'Langues'] as $interest)
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="interests[]" value="{{ $interest }}" class="peer sr-only">
+                            <span class="px-3 py-1.5 border border-gray-200 rounded-full text-xs font-medium text-gray-500 transition-all peer-checked:bg-[#2563EB] peer-checked:text-white peer-checked:border-[#2563EB] hover:bg-gray-50">
+                                {{ $interest }}
+                            </span>
+                        </label>
+                        @endforeach
                     </div>
                 </div>
 

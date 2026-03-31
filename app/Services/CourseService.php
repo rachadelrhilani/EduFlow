@@ -57,9 +57,9 @@ class CourseService
     {
         $user = auth()->user();
 
-        if (empty($user->interests)) {
+        /* if (empty($user->interests)) {
             return $this->courseRepo->all();
-        }
+        } */
 
         return $this->courseRepo->getByCategories($user->interests);
     }

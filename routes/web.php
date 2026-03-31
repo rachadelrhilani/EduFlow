@@ -22,8 +22,5 @@ Route::get('/reset-password/{token}', function (string $token) {
     return view('auth.reset-password', ['token' => $token]);
 })->name('password.reset'); // Ce nom est indispensable
 
-
-
-Route::middleware(['auth'])->group(function () {
-    
-})
+Route::get('/dashboard', function () { return view('dashboard'); });
+Route::get('/courses', [CourseController::class, 'index']);

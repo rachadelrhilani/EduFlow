@@ -70,15 +70,26 @@ class AuthController extends Controller
      * )
      */
     public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
-        try {
-            $token = $this->authService->login($credentials);
-            return response()->json(['token' => $token]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 401);
-        }
+{
+    $credentials = $request->only('email', 'password');
+
+    try {
+        $token = $this->authService->login($credentials);
+        
+        // On récupère l'utilisateur authentifié (via le guard API)
+        $user = auth('api')->user(); 
+
+        return response()->json([
+            'token' => $token,
+            'user' => [
+                'name' => $user->name,
+                'role' => $user->role, // Assure-toi que la colonne 'role' existe en base
+            ]
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 401);
     }
+}
 
     /**
      * @OA\Post(
