@@ -42,7 +42,7 @@ function renderCourses(courses) {
                 ${getEmoji(course.category)}
             </div>
             <div class="p-5">
-                <span class="text-[10px] font-bold text-[#2563EB] uppercase">${course.category}</span>
+                <span class="text-[10px] font-bold text-[#2563EB] uppercase">${course.category.name}</span>
                 <h3 class="font-poppins font-bold text-gray-800 mb-2 truncate">${course.title}</h3>
                 <div class="flex justify-between items-center mt-4">
                     <span class="text-lg font-bold text-gray-900">${course.price}€</span>
@@ -63,8 +63,8 @@ window.showCourseDetails = (courseId) => {
     document.getElementById('modalTitle').innerText = course.title;
     document.getElementById('modalDescription').innerText = course.description;
     document.getElementById('modalPrice').innerText = `${course.price}€`;
-    document.getElementById('modalTeacher').innerText = course.teacher_name || 'Enseignant EduFlow';
-    document.getElementById('modalCategory').innerText = course.category;
+    document.getElementById('modalTeacher').innerText = course.teacher.name || 'Enseignant EduFlow';
+    document.getElementById('modalCategory').innerText = course.category.name;
 
     const modal = document.getElementById('courseModal');
     const content = document.getElementById('modalContent');

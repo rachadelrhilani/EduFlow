@@ -23,4 +23,4 @@ Route::get('/reset-password/{token}', function (string $token) {
 })->name('password.reset'); // Ce nom est indispensable
 
 Route::get('/dashboard', function () { return view('dashboard'); });
-Route::get('/courses', [CourseController::class, 'index']);
+Route::get('/courses', function () { return view('courses.index'); });
