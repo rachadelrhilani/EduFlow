@@ -17,7 +17,7 @@ export const initCourses = async () => {
             const term = e.target.value.toLowerCase();
             const filtered = allCourses.filter(c => 
                 c.title.toLowerCase().includes(term) || 
-                c.category.toLowerCase().includes(term)
+                c.category.name.toLowerCase().includes(term)
             );
             renderCourses(filtered);
         });
@@ -36,11 +36,24 @@ function renderCourses(courses) {
         return;
     }
 
-    grid.innerHTML = courses.map(course => `
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition group">
+    grid.innerHTML = courses.map(course => {
+    // On vérifie si le cours est déjà liké (suppose que ton objet course a un booléen 'is_favorite')
+    const heartColor = course.is_favorite ? 'text-red-500 fill-current' : 'text-gray-400 hover:text-red-500';
+
+    return `
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition group relative">
+            
+            <button onclick="toggleFavorite(${course.id}, this)" 
+                    class="absolute top-3 right-3 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm transition transform hover:scale-110 ${heartColor}">
+                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+            </button>
+
             <div class="h-32 bg-gray-50 flex items-center justify-center text-4xl group-hover:bg-blue-50 transition">
                 ${getEmoji(course.category)}
             </div>
+            
             <div class="p-5">
                 <span class="text-[10px] font-bold text-[#2563EB] uppercase">${course.category.name}</span>
                 <h3 class="font-poppins font-bold text-gray-800 mb-2 truncate">${course.title}</h3>
@@ -52,7 +65,8 @@ function renderCourses(courses) {
                 </div>
             </div>
         </div>
-    `).join('');
+    `;
+}).join('');
 }
 
 // Logique de la Modal
@@ -81,6 +95,37 @@ window.closeCourseModal = () => {
     content.classList.add('scale-95', 'opacity-0');
     setTimeout(() => modal.classList.add('hidden'), 200);
 };
+
+// resources/js/courses.js
+
+// 1. Déclarer la fonction
+const toggleFavorite = async (courseId, btnElement) => {
+    console.log("Tentative de toggle pour le cours:", courseId); // Pour vérifier le clic
+    
+    try {
+        const response = await apiFetch(`/courses/${courseId}/favorite`, {
+            method: 'POST'
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            
+            // On bascule les classes CSS selon le retour du serveur
+            if (data.attached) { 
+                btnElement.classList.replace('text-gray-400', 'text-red-500');
+                btnElement.classList.add('fill-current');
+            } else {
+                btnElement.classList.replace('text-red-500', 'text-gray-400');
+                btnElement.classList.remove('fill-current');
+            }
+        }
+    } catch (error) {
+        console.error("Erreur Favoris:", error);
+    }
+};
+
+// 2. L'EXPOSER AU WINDOW (C'est cette ligne qui débloque tout)
+window.toggleFavorite = toggleFavorite;
 
 function getEmoji(category) {
     const map = { 'Web': '💻', 'Design': '🎨', 'Marketing': '📈', 'Business': '💼' };

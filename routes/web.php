@@ -24,3 +24,4 @@ Route::get('/reset-password/{token}', function (string $token) {
 
 Route::get('/dashboard', function () { return view('dashboard'); });
 Route::get('/courses', function () { return view('courses.index'); });
+Route::get('/favorites', function () { return view('favorites.index'); });

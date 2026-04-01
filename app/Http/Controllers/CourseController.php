@@ -163,15 +163,25 @@ class CourseController extends Controller
      * )
      */
     public function toggleFavorite($id)
-    {
-        try {
-            $result = $this->courseService->toggleFavorite($id);
-            $status = count($result['attached']) > 0 ? 'ajouté aux' : 'retiré des';
-            return response()->json(['message' => "Cours $status favoris."]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => "Cours introuvable"], 404);
-        }
+{
+    try {
+        $result = $this->courseService->toggleFavorite($id);
+        
+        // 1. On garde un vrai booléen (true/false) pour le JS
+        $isAttached = count($result['attached']) > 0;
+        
+        // 2. On prépare le message texte séparément
+        $statusLabel = $isAttached ? 'ajouté aux' : 'retiré des';
+
+        return response()->json([
+            'success'  => true,
+            'attached' => $isAttached, // Envoie true ou false (pas du texte)
+            'message'  => "Cours $statusLabel favoris."
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => "Cours introuvable"], 404);
     }
+}
 
     /**
      * @OA\Get(
