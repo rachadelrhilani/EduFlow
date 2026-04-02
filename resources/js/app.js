@@ -4,6 +4,7 @@ import { checkAuth } from './guard';
 import { initCourses } from './courses';
 import { initDashboard } from './dashboard';
 import { initFavorites } from './favorites';
+import { initCourseCreate } from './course-manager';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -31,5 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (document.getElementById('favorites-grid')) {
         initFavorites();
+    }
+    if(document.getElementById("create-course-form")){
+        initCourseCreate();
     }
 });
