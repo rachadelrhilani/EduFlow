@@ -3,6 +3,7 @@ import { initRegister, initLogin, initForgotPassword } from './auth-handler';
 import { checkAuth } from './guard'; 
 import { initCourses } from './courses';
 import { initDashboard } from './dashboard';
+import { initFavorites } from './favorites';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -27,5 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (document.getElementById("courses-grid")){
        initCourses();
+    }
+    if (document.getElementById('favorites-grid')) {
+        initFavorites();
     }
 });
