@@ -73,4 +73,9 @@ class CourseService
     {
         return $this->courseRepo->getUserFavorites(auth()->id());
     }
+    public function getTeacherCourses()
+    {
+        $teacherId = auth()->id();
+        return $this->courseRepo->getByTeacher($teacherId);
+    }
 }

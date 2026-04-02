@@ -37,7 +37,10 @@ class CourseRepository implements CourseRepositoryInterface
 
     public function getByTeacher(int $teacherId)
     {
-        return Course::where('teacher_id', $teacherId)->get();
+        return Course::where('teacher_id', $teacherId)
+                 ->with('category')
+                 ->latest()
+                 ->get();
     }
 
     public function getByCategories(array $categoryNames)

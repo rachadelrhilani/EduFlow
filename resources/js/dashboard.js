@@ -49,9 +49,16 @@ async function renderTeacherDashboard() {
     `);
 
     try {
-        const response = await apiFetch('/my-stats');
-        const stats = await response.json();
+        // Chargement simultané des stats et des cours via tes nouvelles méthodes Service/Repo
+        const [statsRes, coursesRes] = await Promise.all([
+            apiFetch('/my-stats'),
+            apiFetch('/my-courses')
+        ]);
         
+        const stats = await statsRes.json();
+        const myCourses = await coursesRes.json();
+        
+        // 1. Rendu des Stats
         updateElement('stats-container', `
             <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-[#2563EB]">
                 <p class="text-gray-500 text-xs font-bold uppercase">Revenus</p>
@@ -67,14 +74,43 @@ async function renderTeacherDashboard() {
             </div>
         `);
         
+        // 2. Préparation du HTML de la liste des cours
+        const coursesListHtml = myCourses.length > 0 
+            ? myCourses.map(course => `
+                <div class="flex items-center justify-between p-4 mb-3 bg-white border border-gray-100 rounded-xl hover:shadow-sm transition">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center text-2xl">
+                            ${getEmoji(course.category?.name)}
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">${course.title}</h4>
+                            <p class="text-xs text-gray-500">${course.category?.name || 'Général'} • ${course.price}€</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="location.href='/courses/edit/${course.id}'" class="p-2 text-gray-400 hover:text-blue-600 transition">
+                            ✏️
+                        </button>
+                    </div>
+                </div>
+            `).join('')
+            : `<p class="text-center py-10 text-gray-400">Aucun cours publié pour le moment.</p>`;
+
+        // 3. Rendu final dans main-content
         updateElement('main-content', `
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-lg font-bold text-[#1E3A8A]">Mes derniers cours publiés</h3>
                 <button class="text-sm text-[#2563EB] hover:underline font-medium">Voir tout</button>
             </div>
-            <p class="text-gray-400 italic text-sm">Récupération de la liste en cours...</p>
+            <div id="teacher-courses-container">
+                ${coursesListHtml}
+            </div>
         `);
-    } catch (e) { console.error("Stats Error:", e); }
+
+    } catch (e) { 
+        console.error("Stats/Courses Error:", e);
+        updateElement('main-content', `<p class="text-red-500">Erreur lors du chargement des données.</p>`);
+    }
 }
 
 // --- RENDU ÉTUDIANT ---
@@ -124,4 +160,8 @@ async function renderStudentDashboard() {
             </div>
         `);
     } catch (e) { console.error("Student Dashboard Error:", e); }
+}
+function getEmoji(categoryName) {
+    const map = { 'Web': '💻', 'Design': '🎨', 'Marketing': '📈', 'Business': '💼' };
+    return map[categoryName] || '📚';
 }

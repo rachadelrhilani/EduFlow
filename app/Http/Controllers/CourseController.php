@@ -18,6 +18,26 @@ class CourseController extends Controller
         $this->courseService = $courseService;
     }
 
+    // app/Http/Controllers/CourseController.php
+    /**
+     * @OA\Get(
+     * path="/api/my-courses",
+     * summary="Liste des cours créés par l'enseignant connecté",
+     * tags={"Cours"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Response(response=200, description="Succès")
+     * )
+     */
+    public function myCourses()
+    {
+        try {
+            $courses = $this->courseService->getTeacherCourses();
+            return response()->json($courses);
+        } catch (\Exception $e) {
+            return response()->json(['error' => "Erreur lors de la récupération de vos cours"], 500);
+        }
+    }
+
     /**
      * @OA\Get(
      * path="/api/courses",
@@ -27,7 +47,7 @@ class CourseController extends Controller
      * @OA\Response(response=200, description="Liste des cours récupérée"),
      * )
      */
-    
+
     public function index()
     {
         return response()->json($this->courseService->getAllCourses());
@@ -163,25 +183,25 @@ class CourseController extends Controller
      * )
      */
     public function toggleFavorite($id)
-{
-    try {
-        $result = $this->courseService->toggleFavorite($id);
-        
-        // 1. On garde un vrai booléen (true/false) pour le JS
-        $isAttached = count($result['attached']) > 0;
-        
-        // 2. On prépare le message texte séparément
-        $statusLabel = $isAttached ? 'ajouté aux' : 'retiré des';
+    {
+        try {
+            $result = $this->courseService->toggleFavorite($id);
 
-        return response()->json([
-            'success'  => true,
-            'attached' => $isAttached, // Envoie true ou false (pas du texte)
-            'message'  => "Cours $statusLabel favoris."
-        ]);
-    } catch (\Exception $e) {
-        return response()->json(['error' => "Cours introuvable"], 404);
+            // 1. On garde un vrai booléen (true/false) pour le JS
+            $isAttached = count($result['attached']) > 0;
+
+            // 2. On prépare le message texte séparément
+            $statusLabel = $isAttached ? 'ajouté aux' : 'retiré des';
+
+            return response()->json([
+                'success'  => true,
+                'attached' => $isAttached, // Envoie true ou false (pas du texte)
+                'message'  => "Cours $statusLabel favoris."
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => "Cours introuvable"], 404);
+        }
     }
-}
 
     /**
      * @OA\Get(

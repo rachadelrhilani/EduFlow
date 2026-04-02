@@ -32,6 +32,7 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::middleware('role:enseignant')->group(function () {
+        Route::get('/my-courses', [CourseController::class, 'myCourses']);
         Route::post('/courses', [CourseController::class, 'store']);
         Route::put('/courses/{id}', [CourseController::class, 'update']);
         Route::delete('/courses/{id}', [CourseController::class, 'destroy']);
