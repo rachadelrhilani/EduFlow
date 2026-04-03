@@ -91,6 +91,9 @@ async function renderTeacherDashboard() {
                         <button onclick="location.href='/courses/edit/${course.id}'" class="p-2 text-gray-400 hover:text-blue-600 transition">
                             ✏️
                         </button>
+                        <button onclick="deleteCourse(${course.id}, this)" class="p-2 text-gray-400 hover:text-red-600 transition" title="Supprimer">
+                            🗑️
+                        </button>
                     </div>
                 </div>
             `).join('')
@@ -165,3 +168,41 @@ function getEmoji(categoryName) {
     const map = { 'Web': '💻', 'Design': '🎨', 'Marketing': '📈', 'Business': '💼' };
     return map[categoryName] || '📚';
 }
+// Exposer la fonction au window pour qu'elle soit accessible via l'attribut onclick
+window.deleteCourse = async (courseId, btnElement) => {
+    // Confirmation de sécurité
+    if (!confirm("Êtes-vous sûr de vouloir supprimer ce cours ? Cette action est irréversible.")) {
+        return;
+    }
+
+    try {
+        const response = await apiFetch(`/courses/${courseId}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            // Trouver la ligne du cours (le parent le plus proche avec la classe de bordure)
+            const courseRow = btnElement.closest('.flex.items-center.justify-between');
+            
+            // Animation de sortie
+            courseRow.classList.add('opacity-0', 'scale-95', 'transition-all', 'duration-300');
+            
+            setTimeout(() => {
+                courseRow.remove();
+                
+                // Si la liste est vide après suppression, on peut ré-afficher un message
+                const container = document.getElementById('teacher-courses-container');
+                if (container && container.children.length === 0) {
+                    container.innerHTML = `<p class="text-center py-10 text-gray-400">Aucun cours publié pour le moment.</p>`;
+                }
+            }, 300);
+
+        } else {
+            const error = await response.json();
+            alert("Erreur : " + (error.error || "Impossible de supprimer le cours."));
+        }
+    } catch (e) {
+        console.error("Delete Error:", e);
+        alert("Une erreur réseau est survenue.");
+    }
+};

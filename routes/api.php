@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\GroupController;
 use Illuminate\Http\Request;
@@ -36,6 +37,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/courses', [CourseController::class, 'store']);
         Route::put('/courses/{id}', [CourseController::class, 'update']);
         Route::delete('/courses/{id}', [CourseController::class, 'destroy']);
+        Route::get('/categories', [CategoryController::class, 'index']);
 
         Route::get('/my-courses/{id}/students', [EnrollmentController::class, 'courseStudents']);
         Route::get('/my-stats', [EnrollmentController::class, 'stats']);

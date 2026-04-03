@@ -4,7 +4,7 @@ import { checkAuth } from './guard';
 import { initCourses } from './courses';
 import { initDashboard } from './dashboard';
 import { initFavorites } from './favorites';
-import { initCourseCreate } from './course-manager';
+import { initCourseCreate, initCourseEdit } from './course-manager';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -35,5 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if(document.getElementById("create-course-form")){
         initCourseCreate();
+    }
+    if (document.getElementById('edit-course-form')) {
+        initCourseEdit();
     }
 });
