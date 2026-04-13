@@ -3,6 +3,7 @@
 namespace App\Repositories\Eloquent;
 use App\Models\Course;
 use App\Models\Enrollment;
+use App\Models\User;
 use App\Repositories\Interfaces\EnrollmentRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
@@ -12,12 +13,29 @@ class EnrollmentRepository implements EnrollmentRepositoryInterface {
         return Enrollment::create([
             'user_id' => $userId,
             'course_id' => $courseId,
-            'payment_status' => 'paid',
+            'status' => 'paid', // Statut Confirmée suite au paiement
             'stripe_id' => $paymentId,
             'amount' => $amount
         ]);
     }
 
+    public function getUserEnrolledCourses(int $userId)
+    {
+        $user = User::findOrFail($userId);
+
+        $courses = $user->enrolledCourses()
+                    ->with('category')
+                    ->orderBy('enrollments.created_at', 'desc')
+                    ->get();
+                    
+        // Récupérer et attacher le groupe assigné à l'étudiant pour chaque cours
+        $courses->each(function($course) use ($user) {
+            $group = $user->groups()->where('course_id', $course->id)->first();
+            $course->group_name = $group ? $group->name : 'Aucun groupe';
+        });
+
+        return $courses;
+    }
     public function withdraw($userId, $courseId) {
         return Enrollment::where('user_id', $userId)->where('course_id', $courseId)->delete();
     }

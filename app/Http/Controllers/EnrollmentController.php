@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Services\EnrollmentService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @OA\Tag(name="Inscriptions", description="Gestion des inscriptions aux cours et statistiques")
@@ -16,6 +17,13 @@ class EnrollmentController extends Controller
     public function __construct(EnrollmentService $enrollService)
     {
         $this->enrollService = $enrollService;
+    }
+
+    public function myEnrolledCourses()
+    {
+        $courses = $this->enrollService->getStudentCourses(Auth::id());
+
+        return response()->json($courses);
     }
 
     /**

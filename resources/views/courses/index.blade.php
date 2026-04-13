@@ -32,7 +32,16 @@
                 <p id="modalPrice" class="text-2xl font-poppins font-bold text-[#2563EB]"></p>
             </div>
             <p id="modalDescription" class="text-gray-600 leading-relaxed font-roboto"></p>
-            <button class="w-full bg-[#2563EB] text-white font-bold py-3 rounded-xl hover:bg-[#1E3A8A] transition shadow-lg mt-4">
+            
+            <div class="mt-4 p-4 border border-gray-200 rounded-xl bg-gray-50">
+                <label for="card-element" class="block text-sm font-medium text-gray-700 mb-2">Carte de crédit ou débit</label>
+                <div id="card-element" class="p-3 bg-white border border-gray-300 rounded-lg shadow-sm">
+                    <!-- Stripe Elements sera inséré ici -->
+                </div>
+                <div id="card-errors" role="alert" class="text-red-500 text-sm mt-2 hidden"></div>
+            </div>
+
+            <button onclick="enrollInCourse(window.currentCourseId)" id="enroll-submit-btn" class="w-full bg-[#2563EB] text-white font-bold py-3 rounded-xl hover:bg-[#1E3A8A] transition shadow-lg mt-4">
                 S'inscrire maintenant
             </button>
         </div>

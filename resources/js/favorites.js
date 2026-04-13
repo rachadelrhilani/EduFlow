@@ -57,6 +57,7 @@ window.removeFromFavorites = async (courseId, btn) => {
     try {
         const response = await apiFetch(`/courses/${courseId}/favorite`, { method: 'POST' });
         if (response.ok) {
+            window.showToast("Retiré des favoris", "info");
             const card = document.getElementById(`fav-card-${courseId}`);
             card.classList.add('opacity-0', 'scale-95');
             setTimeout(() => {

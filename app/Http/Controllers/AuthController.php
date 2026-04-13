@@ -70,26 +70,27 @@ class AuthController extends Controller
      * )
      */
     public function login(Request $request)
-{
-    $credentials = $request->only('email', 'password');
+    {
+        $credentials = $request->only('email', 'password');
 
-    try {
-        $token = $this->authService->login($credentials);
-        
-        // On récupère l'utilisateur authentifié (via le guard API)
-        $user = auth('api')->user(); 
+        try {
+            $token = $this->authService->login($credentials);
 
-        return response()->json([
-            'token' => $token,
-            'user' => [
-                'name' => $user->name,
-                'role' => $user->role, // Assure-toi que la colonne 'role' existe en base
-            ]
-        ]);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 401);
+            // On récupère l'utilisateur authentifié (via le guard API)
+            $user = auth('api')->user();
+            $cookie = cookie('jwt_token', $token, 60, '/', null, false, true);
+
+            return response()->json([
+                'token' => $token,
+                'user' => [
+                    'name' => $user->name,
+                    'role' => $user->role,
+                ]
+            ])->withCookie($cookie);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 401);
+        }
     }
-}
 
     /**
      * @OA\Post(
@@ -152,5 +153,25 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
+    }
+    /**
+     * @OA\Post(
+     * path="/api/logout",
+     * summary="Déconnexion de l'utilisateur",
+     * tags={"Authentification"},
+     * @OA\Response(response=200, description="Déconnexion réussie")
+     * )
+     */
+    public function logout()
+    {
+        try {
+            auth('api')->logout();
+        } catch (\Exception $e) {
+            // Le token est peut-être déjà expiré
+        }
+
+        // On crée une réponse JSON et on retire le cookie en le périmant
+        return response()->json(['message' => 'Déconnecté avec succès'])
+            ->withoutCookie('jwt_token');
     }
 }

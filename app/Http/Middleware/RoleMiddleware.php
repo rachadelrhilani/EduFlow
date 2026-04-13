@@ -23,9 +23,12 @@ class RoleMiddleware
         }
 
         if ($user->role !== $role) {
-            return response()->json([
-                'message' => "Accès refusé. Vous devez être $role pour effectuer cette action."
-            ], 403);
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'message' => "Accès refusé. Vous devez être $role pour effectuer cette action."
+                ], 403);
+            }
+            return redirect('/dashboard');
         }
         return $next($request);
     }

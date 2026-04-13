@@ -69,8 +69,11 @@ function renderCourses(courses) {
 }).join('');
 }
 
+// On initialise la variable sur l'objet global window
+window.currentCourseId = null;
 // Logique de la Modal
 window.showCourseDetails = (courseId) => {
+    window.currentCourseId = courseId;
     const course = allCourses.find(c => c.id === courseId);
     if (!course) return;
 
@@ -114,9 +117,11 @@ const toggleFavorite = async (courseId, btnElement) => {
             if (data.attached) { 
                 btnElement.classList.replace('text-gray-400', 'text-red-500');
                 btnElement.classList.add('fill-current');
+                window.showToast("Ajout aux favoris", "success");
             } else {
                 btnElement.classList.replace('text-red-500', 'text-gray-400');
                 btnElement.classList.remove('fill-current');
+                window.showToast("Retiré des favoris", "info");
             }
         }
     } catch (error) {

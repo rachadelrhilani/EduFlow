@@ -19,4 +19,9 @@
             <div class="h-24 bg-gray-50 rounded"></div>
         </div>
     </div>
+    <script>
+    if (!localStorage.getItem('eduflow_token')) {
+        window.location.href = '/login';
+    }
+</script>
 @endsection

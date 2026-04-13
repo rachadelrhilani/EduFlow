@@ -88,7 +88,10 @@ async function renderTeacherDashboard() {
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
-                        <button onclick="location.href='/courses/edit/${course.id}'" class="p-2 text-gray-400 hover:text-blue-600 transition">
+                        <button onclick="location.href='/courses/${course.id}/groups-view'" class="p-2 text-gray-400 hover:text-green-600 transition" title="Voir les groupes">
+                            👥
+                        </button>
+                        <button onclick="location.href='/courses/edit/${course.id}'" class="p-2 text-gray-400 hover:text-blue-600 transition" title="Éditer">
                             ✏️
                         </button>
                         <button onclick="deleteCourse(${course.id}, this)" class="p-2 text-gray-400 hover:text-red-600 transition" title="Supprimer">
@@ -133,41 +136,106 @@ async function renderStudentDashboard() {
     `);
 
     try {
-        const [favRes, recRes] = await Promise.all([
+        // Chargement simultané : Favoris, Recommandations et Inscriptions
+        const [favRes, recRes, enrolledRes] = await Promise.all([
             apiFetch('/favorites'),
-            apiFetch('/recommendations')
+            apiFetch('/recommendations'),
+            apiFetch('/my-enrolled-courses') 
         ]);
         
         const favorites = await favRes.json();
         const recommendations = await recRes.json();
+        const enrolled = await enrolledRes.json();
 
+        // 1. Mise à jour des Stats
         updateElement('stats-container', `
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <p class="text-gray-500 text-xs font-bold uppercase">Cours en cours</p>
+                <p class="text-gray-500 text-xs font-bold uppercase tracking-wider">Cours en cours</p>
+                <h3 class="text-3xl font-bold text-[#1E3A8A] mt-1">${enrolled.length}</h3>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <p class="text-gray-500 text-xs font-bold uppercase tracking-wider">Mes Favoris</p>
                 <h3 class="text-3xl font-bold text-[#1E3A8A] mt-1">${favorites.length}</h3>
             </div>
         `);
 
-        updateElement('main-content', `
-            <h3 class="text-lg font-bold text-[#1E3A8A] mb-6">Recommandations pour vous</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                ${recommendations.map(c => `
-                    <div class="p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition cursor-pointer flex justify-between items-center">
-                        <div>
-                            <p class="font-bold text-gray-800">${c.title}</p>
-                            <p class="text-xs text-gray-500">${c.category || 'Formation'}</p>
+        // 2. Construction du HTML pour les cours inscrits
+        const enrolledHtml = enrolled.length > 0 
+            ? enrolled.map(course => `
+                <div id="enrolled-${course.id}" class="bg-white p-5 rounded-2xl border border-gray-100 flex justify-between items-center shadow-sm mb-4 hover:border-blue-200 transition">
+                    <div class="flex items-center gap-4">
+                        <div class="text-3xl bg-blue-50 w-12 h-12 flex items-center justify-center rounded-xl">
+                            ${getEmoji(course.category?.name)}
                         </div>
-                        <span class="text-blue-500">→</span>
+                        <div>
+                            <h4 class="font-bold text-gray-800">${course.title}</h4>
+                            <p class="text-xs text-gray-500 mb-1">
+                                Inscrit le ${new Date(course.pivot?.created_at).toLocaleDateString()}
+                            </p>
+                            <div class="flex items-center gap-2 mt-1">
+                                ${getStatusBadge(course.pivot?.status)}
+                                <span class="inline-block px-3 py-1 bg-purple-100 text-purple-700 text-[10px] font-bold rounded-full uppercase tracking-wider">
+                                    ${course.group_name || 'Aucun groupe'}
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                `).join('')}
+                    <div class="flex gap-3">
+                        <button onclick="withdrawFromCourse(${course.id})" class="p-2 text-gray-300 hover:text-red-500 transition" title="Se désinscrire">
+                            quitter
+                        </button>
+                    </div>
+                </div>
+            `).join('')
+            : `<p class="text-gray-400 italic text-center py-6 bg-gray-50 rounded-xl border-2 border-dashed">Aucune inscription active.</p>`;
+
+        // 3. Rendu global dans main-content
+        updateElement('main-content', `
+            <div class="mb-10">
+                <h3 class="text-lg font-bold text-[#1E3A8A] mb-6">Mes Formations en cours</h3>
+                <div class="flex flex-col">
+                    ${enrolledHtml}
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-bold text-[#1E3A8A] mb-6">Suggestions pour vous</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    ${recommendations.length > 0 ? recommendations.map(c => `
+                        <div onclick="showCourseDetails(${c.id})" class="p-4 bg-white border border-gray-100 rounded-xl hover:bg-gray-50 hover:shadow-md transition cursor-pointer flex justify-between items-center">
+                            <div>
+                                <p class="font-bold text-gray-800">${c.title}</p>
+                                <p class="text-xs text-gray-500 uppercase font-semibold">${c.category?.name || 'Formation'}</p>
+                            </div>
+                            <span class="text-[#2563EB] font-bold text-xl">→</span>
+                        </div>
+                    `).join('') : '<p class="text-gray-400 italic col-span-full">Complétez vos intérêts pour voir nos suggestions personnalisées.</p>'}
+                </div>
             </div>
         `);
-    } catch (e) { console.error("Student Dashboard Error:", e); }
+
+    } catch (e) { 
+        console.error("Student Dashboard Error:", e);
+        updateElement('main-content', `<p class="text-red-500 text-center">Erreur lors du chargement de votre espace.</p>`);
+    }
 }
 function getEmoji(categoryName) {
     const map = { 'Web': '💻', 'Design': '🎨', 'Marketing': '📈', 'Business': '💼' };
     return map[categoryName] || '📚';
 }
+
+function getStatusBadge(status) {
+    const defaultStatus = 'pending';
+    const s = status || defaultStatus;
+    
+    if (s === 'confirmed') {
+        return `<span class="inline-block px-3 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded-full uppercase tracking-wider">Confirmée</span>`;
+    } else if (s === 'cancelled') {
+        return `<span class="inline-block px-3 py-1 bg-red-100 text-red-700 text-[10px] font-bold rounded-full uppercase tracking-wider">Annulée</span>`;
+    }
+    return `<span class="inline-block px-3 py-1 bg-yellow-100 text-yellow-700 text-[10px] font-bold rounded-full uppercase tracking-wider">En attente</span>`;
+}
+
 // Exposer la fonction au window pour qu'elle soit accessible via l'attribut onclick
 window.deleteCourse = async (courseId, btnElement) => {
     // Confirmation de sécurité
@@ -205,4 +273,19 @@ window.deleteCourse = async (courseId, btnElement) => {
         console.error("Delete Error:", e);
         alert("Une erreur réseau est survenue.");
     }
+};
+window.withdrawFromCourse = async (courseId) => {
+    if (!confirm("Voulez-vous vraiment vous retirer de ce cours ? Votre progression sera perdue.")) return;
+
+    try {
+        const response = await apiFetch(`/courses/${courseId}/withdraw`, { method: 'DELETE' });
+        if (response.ok) {
+            const el = document.getElementById(`enrolled-${courseId}`);
+            el.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => {
+                el.remove();
+                // Optionnel : Recharger les stats si nécessaire
+            }, 300);
+        }
+    } catch (e) { console.error(e); }
 };

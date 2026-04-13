@@ -26,6 +26,11 @@ class EnrollmentService
         $this->courseRepo = $courseRepo;
         $this->groupRepo = $groupRepo;
     }
+    public function getStudentCourses(int $userId)
+    {
+        // On pourrait ajouter ici une logique de cache ou de filtrage
+        return $this->enrollRepo->getUserEnrolledCourses($userId);
+    }
 
     public function enrollStudent(int $courseId, string $stripeToken)
     {
@@ -97,6 +102,6 @@ class EnrollmentService
 
     public function getStatsForTeacher()
     {
-        return $this->enrollRepo->getTeacherStats(Auth::id());
+        return $this->enrollRepo->getTeacherStats(auth('api')->id());
     }
 }

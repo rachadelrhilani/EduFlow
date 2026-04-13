@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\JwtCookieAuth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -21,10 +22,17 @@ Route::get('/forgot-password', function () {
 Route::get('/reset-password/{token}', function (string $token) {
     return view('auth.reset-password', ['token' => $token]);
 })->name('password.reset'); // Ce nom est indispensable
+Route::middleware(['jwt.web'])->group(function () {
+    Route::get('/dashboard', function () { return view('dashboard'); });
+    Route::get('/courses', function () { return view('courses.index'); });
 
-Route::get('/dashboard', function () { return view('dashboard'); });
-Route::get('/courses', function () { return view('courses.index'); });
-Route::get('/courses/create', function () { return view('courses.create'); });
-Route::get('/courses/edit/{id}', function ($id) { return view('courses.edit',['id'=>$id]); });
-// Ajoute $id entre les parenthèses de function($id)
-Route::get('/favorites', function () { return view('favorites.index'); });
+    Route::middleware('role:enseignant')->group(function () {
+        Route::get('/courses/create', function () { return view('courses.create'); });
+        Route::get('/courses/edit/{id}', function ($id) { return view('courses.edit',['id'=>$id]); });
+        Route::get('/courses/{id}/groups-view', function ($id) { return view('courses.groups', ['courseId' => $id]); });
+    });
+
+    Route::middleware('role:étudiant')->group(function () {
+        Route::get('/favorites', function () { return view('favorites.index'); });
+    });
+});

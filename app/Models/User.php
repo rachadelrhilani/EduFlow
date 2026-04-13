@@ -43,6 +43,13 @@ class User extends Authenticatable implements JWTSubject
     public function groups() {
         return $this->belongsToMany(Group::class, 'group_user');
     }
+    // Dans App\Models\User.php
+
+public function enrolledCourses() {
+    return $this->belongsToMany(Course::class, 'enrollments')
+                ->withPivot('stripe_id', 'amount', 'status', 'created_at')
+                ->withTimestamps();
+}
 
     /**
      * The attributes that should be hidden for serialization.

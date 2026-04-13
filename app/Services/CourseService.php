@@ -57,9 +57,10 @@ class CourseService
     {
         $user = auth()->user();
 
-        /* if (empty($user->interests)) {
-            return $this->courseRepo->all();
-        } */
+        if (empty($user->interests)) {
+            // S'il n'a pas d'intérêts, on lui suggère les cours récents par défaut
+            return $this->courseRepo->all()->take(4);
+        }
 
         return $this->courseRepo->getByCategories($user->interests);
     }
@@ -75,7 +76,7 @@ class CourseService
     }
     public function getTeacherCourses()
     {
-        $teacherId = auth()->id();
+        $teacherId = auth('api')->id();
         return $this->courseRepo->getByTeacher($teacherId);
     }
 }

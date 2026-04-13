@@ -17,6 +17,12 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'jwt.web' => \App\Http\Middleware\JwtCookieAuth::class,
+        ]);
+
+        // Désactiver le chiffrement pour ton cookie
+        $middleware->encryptCookies(except: [
+            'jwt_token',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -24,6 +24,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::middleware('role:étudiant')->group(function () {
         Route::get('/recommendations', [CourseController::class, 'recommendations']);
+        Route::get('/my-enrolled-courses', [EnrollmentController::class, 'myEnrolledCourses']);
         Route::post('/courses/{id}/favorite', [CourseController::class, 'toggleFavorite']);
         Route::get('/favorites', [CourseController::class, 'favorites']);
 
@@ -43,4 +44,5 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/my-stats', [EnrollmentController::class, 'stats']);
         Route::get('/courses/{id}/groups', [GroupController::class, 'index']);
     });
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
