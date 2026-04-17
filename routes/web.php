@@ -30,6 +30,7 @@ Route::middleware(['jwt.web'])->group(function () {
         Route::get('/courses/create', function () { return view('courses.create'); });
         Route::get('/courses/edit/{id}', function ($id) { return view('courses.edit',['id'=>$id]); });
         Route::get('/courses/{id}/groups-view', function ($id) { return view('courses.groups', ['courseId' => $id]); });
+        Route::get('/my-students', function () { return view('my-students'); });
     });
 
     Route::middleware('role:étudiant')->group(function () {

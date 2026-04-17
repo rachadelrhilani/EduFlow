@@ -8,6 +8,8 @@ import { initCourseCreate, initCourseEdit } from './course-manager';
 import { initEnrollment } from './enrollment';
 import { showToast } from './toast';
 import { initGroups } from './groups';
+import { initMyStudents } from './my-students';
+
 
 window.showToast = showToast;
 
@@ -47,5 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (document.getElementById('groups-container')) {
         initGroups();
+    }
+    if (document.getElementById('students-groups-container')) {
+        initMyStudents();
     }
 });

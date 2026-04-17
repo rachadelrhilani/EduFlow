@@ -40,6 +40,7 @@ export const logout = async () => {
     // Expiration forcée du cookie
     document.cookie = "jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     
-    window.location.href = '/login';
+    // Redirection sécurisée vers le login (remplace l'entrée dans l'historique)
+    window.location.replace('/login');
 };
 window.logout = logout;

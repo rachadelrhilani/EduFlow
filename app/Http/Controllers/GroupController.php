@@ -81,4 +81,14 @@ class GroupController extends Controller
             ], 403);
         }
     }
+
+    public function teacherStudents()
+    {
+        try {
+            $groups = $this->enrollmentService->getTeacherGroupsWithStudents();
+            return response()->json(['status' => 'success', 'data' => $groups], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
 }

@@ -9,4 +9,6 @@ interface GroupRepositoryInterface
     public function getGroupsByCourse(int $courseId);
 
     public function addStudentToGroup(int $groupId, int $userId);
-}
+
+    public function getGroupsByTeacher(int $teacherId);
+}

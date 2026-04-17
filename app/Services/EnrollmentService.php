@@ -104,4 +104,9 @@ class EnrollmentService
     {
         return $this->enrollRepo->getTeacherStats(auth('api')->id());
     }
+
+    public function getTeacherGroupsWithStudents()
+    {
+        return $this->groupRepo->getGroupsByTeacher(auth('api')->id());
+    }
 }

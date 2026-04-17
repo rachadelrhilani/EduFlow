@@ -33,7 +33,6 @@
                 </div>
 
                 <div class="flex items-center space-x-6">
-                    <a href="/courses" class="text-gray-600 hover:text-[#2563EB] text-sm font-medium transition">Explorer</a>
                     
                     <div id="auth-nav" class="flex items-center space-x-4 border-l pl-6 border-gray-200">
                         <a href="/login" class="text-gray-600 hover:text-[#2563EB] text-sm font-medium">Connexion</a>

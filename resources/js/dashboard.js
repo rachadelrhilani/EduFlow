@@ -49,7 +49,6 @@ async function renderTeacherDashboard() {
     `);
 
     try {
-        // Chargement simultané des stats et des cours via tes nouvelles méthodes Service/Repo
         const [statsRes, coursesRes] = await Promise.all([
             apiFetch('/my-stats'),
             apiFetch('/my-courses')
@@ -74,7 +73,6 @@ async function renderTeacherDashboard() {
             </div>
         `);
         
-        // 2. Préparation du HTML de la liste des cours
         const coursesListHtml = myCourses.length > 0 
             ? myCourses.map(course => `
                 <div class="flex items-center justify-between p-4 mb-3 bg-white border border-gray-100 rounded-xl hover:shadow-sm transition">

@@ -43,6 +43,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/my-courses/{id}/students', [EnrollmentController::class, 'courseStudents']);
         Route::get('/my-stats', [EnrollmentController::class, 'stats']);
         Route::get('/courses/{id}/groups', [GroupController::class, 'index']);
+        Route::get('/teacher/students', [GroupController::class, 'teacherStudents']);
     });
     Route::post('/logout', [AuthController::class, 'logout']);
 });

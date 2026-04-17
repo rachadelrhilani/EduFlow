@@ -40,4 +40,14 @@ public function getOrCreateAvailableGroup(int $courseId)
         $group = Group::findOrFail($groupId);
         return $group->students()->attach($userId);
     }
-}
+
+    public function getGroupsByTeacher(int $teacherId)
+    {
+        return Group::whereHas('course', function ($query) use ($teacherId) {
+            $query->where('teacher_id', $teacherId);
+        })
+        ->with(['course:id,title', 'students:id,name,email'])
+        ->withCount('students')
+        ->get();
+    }
+}
